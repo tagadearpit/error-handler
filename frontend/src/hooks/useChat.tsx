@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { apiStreamChat } from "@/lib/api";
 import type { ChatMessage, Citation, SSEEvent } from "@/lib/types";
 
