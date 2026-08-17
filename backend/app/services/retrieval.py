@@ -12,6 +12,7 @@ from app.models.chunk import DocumentChunk
 from app.models.document import Document, AccessLevel
 from app.models.user import UserRole
 from app.services.embedding import generate_single_embedding
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
