@@ -7,6 +7,7 @@ import { CitationModal } from "@/components/chat/CitationModal";
 import { QuickActions } from "@/components/chat/QuickActions";
 import { useChat } from "@/hooks/useChat";
 import type { Citation } from "@/lib/types";
+import { AlertCircle } from "lucide-react";
 
 export default function ChatPage() {
   const chat = useChat();
@@ -31,6 +32,17 @@ export default function ChatPage() {
         {/* Quick actions — only show when no messages */}
         {chat.messages.length === 0 && !chat.isStreaming && (
           <QuickActions onSelect={handleQuickAction} />
+        )}
+
+        {/* Error Banner */}
+        {chat.error && (
+          <div className="mx-4 mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm text-red-200 font-medium">Error</p>
+              <p className="text-xs text-red-300 mt-0.5">{chat.error}</p>
+            </div>
+          </div>
         )}
 
         <ChatInput

@@ -196,11 +196,25 @@ async def chat_completions(
             
         except Exception as e:
             logger.error(f"Error during chat completion: {e}", exc_info=True)
+            error_message = "An error occurred while generating a response. Please try again."
             error_data = json.dumps({
                 "type": "error", 
-                "message": "An error occurred while generating a response. Please try again."
+                "message": error_message
             })
             yield f"data: {error_data}\n\n"
+            
+            # Save assistant error message to DB so it's not orphaned
+            try:
+                if 'session_id' in locals() and session_id:
+                    assistant_msg = ChatMessage(
+                        session_id=session_id,
+                        role=MessageRole.assistant,
+                        content=f"⚠️ {error_message}",
+                    )
+                    db.add(assistant_msg)
+                    await db.commit()
+            except Exception as db_err:
+                logger.error(f"Failed to save error message to DB: {db_err}")
 
     return StreamingResponse(
         event_stream(),
