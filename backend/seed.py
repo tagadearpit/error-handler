@@ -2,7 +2,6 @@
 Seed script — creates demo users for testing.
 Run: python -m seed
 """
-
 import asyncio
 import logging
 
