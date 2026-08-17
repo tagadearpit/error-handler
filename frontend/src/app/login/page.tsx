@@ -101,20 +101,54 @@ export default function LoginPage() {
         </form>
 
         {/* Demo credentials */}
-        <div className="mt-4 bg-white/[0.02] border border-white/5 rounded-xl p-3">
-          <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2 font-medium">Demo Accounts</p>
-          <div className="grid grid-cols-2 gap-1.5 text-[11px] text-gray-400">
-            <button onClick={() => { setEmail("admin@helpdesk.edu"); setPassword("admin1234"); }} className="text-left px-2 py-1 hover:bg-white/5 rounded transition-colors">
-              🛡️ admin@helpdesk.edu
+        <div className="mt-4 bg-white/[0.02] border border-white/5 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase">Demo Accounts</p>
+            <p className="text-[10px] text-violet-400/80 bg-violet-400/10 px-2 py-0.5 rounded-full">Click to auto-fill</p>
+          </div>
+          <div className="grid grid-cols-2 gap-2 text-xs text-gray-300">
+            <button 
+              type="button"
+              onClick={() => { setEmail("admin@helpdesk.edu"); setPassword("admin1234"); }} 
+              className="group flex flex-col items-start px-3 py-2.5 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-violet-500/30 rounded-lg transition-all"
+            >
+              <span className="flex items-center gap-1.5 text-gray-200 font-medium mb-0.5">
+                🛡️ Admin
+              </span>
+              <span className="text-[10px] text-gray-500 group-hover:text-gray-300 transition-colors">admin@helpdesk.edu</span>
             </button>
-            <button onClick={() => { setEmail("student@helpdesk.edu"); setPassword("student1234"); }} className="text-left px-2 py-1 hover:bg-white/5 rounded transition-colors">
-              🎓 student@helpdesk.edu
+            
+            <button 
+              type="button"
+              onClick={() => { setEmail("student@helpdesk.edu"); setPassword("student1234"); }} 
+              className="group flex flex-col items-start px-3 py-2.5 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-violet-500/30 rounded-lg transition-all"
+            >
+              <span className="flex items-center gap-1.5 text-gray-200 font-medium mb-0.5">
+                🎓 Student
+              </span>
+              <span className="text-[10px] text-gray-500 group-hover:text-gray-300 transition-colors">student@helpdesk.edu</span>
             </button>
-            <button onClick={() => { setEmail("faculty@helpdesk.edu"); setPassword("faculty1234"); }} className="text-left px-2 py-1 hover:bg-white/5 rounded transition-colors">
-              📚 faculty@helpdesk.edu
+
+            <button 
+              type="button"
+              onClick={() => { setEmail("faculty@helpdesk.edu"); setPassword("faculty1234"); }} 
+              className="group flex flex-col items-start px-3 py-2.5 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-violet-500/30 rounded-lg transition-all"
+            >
+              <span className="flex items-center gap-1.5 text-gray-200 font-medium mb-0.5">
+                📚 Faculty
+              </span>
+              <span className="text-[10px] text-gray-500 group-hover:text-gray-300 transition-colors">faculty@helpdesk.edu</span>
             </button>
-            <button onClick={() => { setEmail("support@helpdesk.edu"); setPassword("support1234"); }} className="text-left px-2 py-1 hover:bg-white/5 rounded transition-colors">
-              🎧 support@helpdesk.edu
+
+            <button 
+              type="button"
+              onClick={() => { setEmail("support@helpdesk.edu"); setPassword("support1234"); }} 
+              className="group flex flex-col items-start px-3 py-2.5 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-violet-500/30 rounded-lg transition-all"
+            >
+              <span className="flex items-center gap-1.5 text-gray-200 font-medium mb-0.5">
+                🎧 Support
+              </span>
+              <span className="text-[10px] text-gray-500 group-hover:text-gray-300 transition-colors">support@helpdesk.edu</span>
             </button>
           </div>
         </div>
