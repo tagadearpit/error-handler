@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+/* ── Custom scrollbar ── */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Prose overrides for dark theme ── */
+.prose-invert {
+  --tw-prose-body: #d1d5db;
+  --tw-prose-headings: #f3f4f6;
+  --tw-prose-links: #a78bfa;
+  --tw-prose-bold: #f3f4f6;
+  --tw-prose-code: #c4b5fd;
+  --tw-prose-pre-bg: rgba(255, 255, 255, 0.05);
+  --tw-prose-pre-code: #d1d5db;
+  --tw-prose-th-borders: rgba(255, 255, 255, 0.1);
+  --tw-prose-td-borders: rgba(255, 255, 255, 0.05);
+}
+
+.prose pre {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+}
+
+.prose code::before,
+.prose code::after {
+  content: "" !important;
+}
+
+.prose code {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.8125em;
+}
+
+.prose table {
+  border-collapse: collapse;
+}
+
+.prose th,
+.prose td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.prose th {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ── Animation utilities ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* ── Gradient background ── */
+.bg-grid-pattern {
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* ── Select styling ── */
+select option {
+  background: #111827;
+  color: #f3f4f6;
+}

@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL with pgvector ──
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: helpdesk-postgres
+    environment:
+      POSTGRES_USER: helpdesk
+      POSTGRES_PASSWORD: helpdesk_pass
+      POSTGRES_DB: helpdesk_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U helpdesk -d helpdesk_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── FastAPI Backend ──
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: helpdesk-backend
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://helpdesk:helpdesk_pass@postgres:5432/helpdesk_db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  # ── Next.js Frontend ──
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: helpdesk-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    command: npm run dev
+
+volumes:
+  pgdata:
+  uploads:
