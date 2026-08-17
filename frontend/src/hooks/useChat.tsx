@@ -83,6 +83,9 @@ export function useChat(): UseChatReturn {
             case "session":
               setSessionId(event.session_id);
               break;
+            case "status":
+              // We just use this to keep the connection alive
+              break;
             case "token":
               setStreamingContent((prev) => prev + event.content);
               break;

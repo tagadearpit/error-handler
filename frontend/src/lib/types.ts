@@ -134,9 +134,21 @@ export interface SSEDoneEvent {
   message_id: number;
 }
 
+export interface SSEStatusEvent {
+  type: "status";
+  status: string;
+}
+
+export interface SSEErrorEvent {
+  type: "error";
+  message: string;
+}
+
 export type SSEEvent =
   | SSESessionEvent
   | SSETokenEvent
   | SSECitationsEvent
   | SSEEscalationEvent
-  | SSEDoneEvent;
+  | SSEDoneEvent
+  | SSEStatusEvent
+  | SSEErrorEvent;

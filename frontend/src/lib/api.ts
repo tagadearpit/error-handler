@@ -1,10 +1,11 @@
 /* ── API Client with JWT interceptor ── */
 
+const isProd = typeof window !== "undefined" && window.location.hostname !== "localhost";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
-if (typeof window !== "undefined" && window.location.hostname !== "localhost" && API_BASE.includes("localhost")) {
-  console.error(
-    "🚨 WARNING: Production frontend is configured to call localhost API. " +
+if (isProd && API_BASE.includes("localhost")) {
+  throw new Error(
+    "🚨 FATAL: Production frontend is configured to call localhost API. " +
     "You must set NEXT_PUBLIC_API_URL in your Vercel deployment settings to point to your backend."
   );
 }
@@ -114,7 +115,7 @@ export function apiStreamChat(
       const reader = response.body?.getReader();
       if (!reader) throw new Error("No response body");
 
-      const decoder = new TextDecoder();
+      const decoder = new TextDecoder("utf-8");
       let buffer = "";
 
       try {
@@ -123,7 +124,9 @@ export function apiStreamChat(
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split("\n\n");
+          
+          // Handle both \n\n and \r\n\r\n delimiters
+          const lines = buffer.split(/\r?\n\r?\n/);
           buffer = lines.pop() || "";
 
           for (const line of lines) {
@@ -131,8 +134,17 @@ export function apiStreamChat(
               try {
                 const data = JSON.parse(line.slice(6));
                 onEvent(data);
-              } catch {
-                // ignore malformed JSON
+                
+                // If it's an error event, throw to stop processing
+                if (data.type === "error") {
+                   throw new Error(data.message || "An error occurred from the server");
+                }
+              } catch (e) {
+                if (e instanceof Error && e.message !== "Unexpected end of JSON input" && !e.message.includes("JSON")) {
+                    // It's the server error we just threw, re-throw it
+                    throw e;
+                }
+                console.error("Failed to parse SSE event JSON:", line, e);
               }
             }
           }
@@ -140,21 +152,21 @@ export function apiStreamChat(
 
         // Process any remaining buffer content
         if (buffer.trim()) {
-          const lines = buffer.split("\n\n");
+          const lines = buffer.split(/\r?\n\r?\n/);
           for (const line of lines) {
             if (line.startsWith("data: ")) {
               try {
                 const data = JSON.parse(line.slice(6));
                 onEvent(data);
-              } catch {
-                // ignore
+              } catch (e) {
+                console.error("Failed to parse remaining SSE event JSON:", line, e);
               }
             }
           }
         }
         onComplete();
-      } catch (err) {
-        throw new Error("Stream interrupted or failed to read.");
+      } catch (err: any) {
+        throw new Error(err.message || "Stream interrupted or failed to read.");
       }
     })
     .catch((err) => {
