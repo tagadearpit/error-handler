@@ -40,11 +40,11 @@ STRUCTURED_QA_PROMPT = """You are an AI Helpdesk Assistant for a college/busines
 
 ## RESPONSE FORMAT:
 You must return a valid JSON object matching this schema:
-{
+{{
   "answerable": boolean,
   "answer": "Your detailed answer goes here, with inline citations. If answerable is false, leave this empty.",
   "citations": ["[^doc_id:page]", ...] // List of unique citations you actually used in your answer.
-}
+}}
 
 ## CONTEXT DOCUMENTS:
 {context}
@@ -150,17 +150,17 @@ async def generate_structured_response(
     context_block = _build_context_block(chunks)
     history_block = _build_history_block(chat_history)
 
-    system_prompt = STRUCTURED_QA_PROMPT.format(
-        context=context_block,
-        history=history_block,
-    )
-
-    model = genai.GenerativeModel(
-        settings.GEMINI_CHAT_MODEL,
-        system_instruction=system_prompt,
-    )
-
     try:
+        system_prompt = STRUCTURED_QA_PROMPT.format(
+            context=context_block,
+            history=history_block,
+        )
+
+        model = genai.GenerativeModel(
+            settings.GEMINI_CHAT_MODEL,
+            system_instruction=system_prompt,
+        )
+
         response = await model.generate_content_async(
             user_message,
             generation_config=genai.types.GenerationConfig(
@@ -170,8 +170,8 @@ async def generate_structured_response(
         )
         return json.loads(response.text)
     except Exception as e:
-        logger.error(f"Structured LLM failed: {e}")
-        return {"answerable": False, "answer": "", "citations": []}
+        logger.error(f"Structured LLM failed: {e}", exc_info=True)
+        raise e
 
 
 async def stream_grounded_response(
